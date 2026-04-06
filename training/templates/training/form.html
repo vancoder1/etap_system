@@ -1,0 +1,22 @@
+{% extends 'training/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 mt-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">{{ object|yesno:"Edit,Add" }} Record</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-success mt-3 w-100">Submit</button>
+                    <!-- Return to list (adjusts route by splitting path usually or passing next) -->
+                    <a href="javascript:history.back()" class="btn btn-secondary mt-2 w-100">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
