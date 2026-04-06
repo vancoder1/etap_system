@@ -1,0 +1,41 @@
+{% extends 'training/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Courses</h2>
+    <a href="{% url 'course_add' %}" class="btn btn-success">+ Add Course</a>
+</div>
+
+<!-- Placeholder for Filter eventually requested in Step 4B -->
+<div class="mb-3 p-2 bg-white rounded border">
+    <span>Filter: Category [Dropdown pending]</span>
+</div>
+
+<table class="table table-striped table-bordered bg-white shadow-sm">
+    <thead class="table-dark">
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Duration (min)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for course in courses %}
+        <tr>
+            <td>{{ course.title }}</td>
+            <td>{{ course.category }}</td>
+            <td>{{ course.duration_minutes }}</td>
+            <td>
+                <a href="{% url 'course_edit' course.pk %}" class="btn btn-sm btn-primary">Edit</a>
+                <a href="{% url 'course_delete' course.pk %}" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="text-center text-muted">No courses found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
