@@ -139,7 +139,7 @@ class EnrollmentListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['statuses'] = Enrollment.STATUS_CHOICES
+        context['statuses'] = Enrollment.STATUSES
         context['selected_status'] = self.request.GET.get('status', '')
         return context
 
@@ -166,8 +166,8 @@ class CoursePopularityView(TemplateView):
         context = super().get_context_data(**kwargs)
         # Group by course title and annotate total enrollments and completed enrollments
         course_stats = Course.objects.annotate(
-            total_enrollments=Count('sessions__enrollments'),
-            completed_enrollments=Count('sessions__enrollments', filter=Q(sessions__enrollments__status='COMPLETED'))
+            total_enrollments=Count('session__enrollment'),
+            completed_enrollments=Count('session__enrollment', filter=Q(session__enrollment__status='COMPLETED'))
         ).order_by('-total_enrollments')
         
         # Calculate success rate
