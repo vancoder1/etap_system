@@ -12,6 +12,19 @@ class EmployeeListView(ListView):
     template_name = 'training/employee_list.html'
     context_object_name = 'employees'
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        department = self.request.GET.get('department')
+        if department:
+            qs = qs.filter(department=department)
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['departments'] = Employee.DEPARTMENTS
+        context['selected_dept'] = self.request.GET.get('department', '')
+        return context
+
 class EmployeeCreateView(CreateView):
     model = Employee
     fields = ['full_name', 'email', 'department']
@@ -34,6 +47,19 @@ class CourseListView(ListView):
     model = Course
     template_name = 'training/course_list.html'
     context_object_name = 'courses'
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        category = self.request.GET.get('category')
+        if category:
+            qs = qs.filter(category=category)
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Course.CATEGORIES
+        context['selected_cat'] = self.request.GET.get('category', '')
+        return context
 
 class CourseCreateView(CreateView):
     model = Course
@@ -58,6 +84,28 @@ class SessionListView(ListView):
     template_name = 'training/session_list.html'
     context_object_name = 'sessions'
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        start_date = self.request.GET.get('start_date')
+        end_date = self.request.GET.get('end_date')
+        instructor = self.request.GET.get('instructor')
+
+        if start_date:
+            qs = qs.filter(session_date__gte=start_date)
+        if end_date:
+            qs = qs.filter(session_date__lte=end_date)
+        if instructor:
+            qs = qs.filter(instructor_name__icontains=instructor)
+            
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['selected_start'] = self.request.GET.get('start_date', '')
+        context['selected_end'] = self.request.GET.get('end_date', '')
+        context['selected_instructor'] = self.request.GET.get('instructor', '')
+        return context
+
 class SessionCreateView(CreateView):
     model = Session
     fields = ['course', 'session_date', 'instructor_name', 'mode']
@@ -80,6 +128,19 @@ class EnrollmentListView(ListView):
     model = Enrollment
     template_name = 'training/enrollment_list.html'
     context_object_name = 'enrollments'
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        status = self.request.GET.get('status')
+        if status:
+            qs = qs.filter(status=status)
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['statuses'] = Enrollment.STATUS_CHOICES
+        context['selected_status'] = self.request.GET.get('status', '')
+        return context
 
 class EnrollmentCreateView(CreateView):
     model = Enrollment
