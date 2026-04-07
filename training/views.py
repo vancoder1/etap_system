@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView
+from django.db.models import Count, Q
 from .models import Employee, Course, Session, Enrollment
 
 # Home View
@@ -153,4 +154,54 @@ class EnrollmentUpdateView(UpdateView):
     fields = ['employee', 'session', 'status']
     template_name = 'training/form.html'
     success_url = reverse_lazy('enrollment_list')
+
+# --- Analytics Views ---
+class AnalyticsDashboardView(TemplateView):
+    template_name = 'training/analytics_dashboard.html'
+
+class CoursePopularityView(TemplateView):
+    template_name = 'training/course_popularity.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Group by course title and annotate total enrollments and completed enrollments
+        course_stats = Course.objects.annotate(
+            total_enrollments=Count('sessions__enrollments'),
+            completed_enrollments=Count('sessions__enrollments', filter=Q(sessions__enrollments__status='COMPLETED'))
+        ).order_by('-total_enrollments')
+        
+        # Calculate success rate
+        for course in course_stats:
+            if course.total_enrollments > 0:
+                course.success_rate = (course.completed_enrollments / course.total_enrollments) * 100
+            else:
+                course.success_rate = 0
+                
+        context['course_stats'] = course_stats
+        return context
+
+class DepartmentParticipationView(TemplateView):
+    template_name = 'training/department_participation.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # We need a summary of completed enrollments per department
+        departments = Employee.DEPARTMENTS
+        dept_stats = []
+        
+        for dept_code, dept_name in departments:
+            completed_count = Enrollment.objects.filter(
+                employee__department=dept_code, 
+                status='COMPLETED'
+            ).count()
+            dept_stats.append({
+                'department': dept_name,
+                'completed_trainings': completed_count
+            })
+            
+        # Sort by completed count descending
+        dept_stats.sort(key=lambda x: x['completed_trainings'], reverse=True)
+        context['dept_stats'] = dept_stats
+        return context
+
 

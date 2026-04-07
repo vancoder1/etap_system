@@ -1,0 +1,29 @@
+{% extends 'training/base.html' %}
+
+{% block content %}
+<div class="mb-4">
+    <h2>Analytics Dashboard</h2>
+    <p class="text-muted">Select a report below to view portal analytics.</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h5 class="card-title">Course Popularity Report</h5>
+                <p class="card-text text-muted">View total enrollments for each course and calculate success rates.</p>
+                <a href="{% url 'course_popularity' %}" class="btn btn-primary">View Report</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h5 class="card-title">Department Participation</h5>
+                <p class="card-text text-muted">Compare training participation across departments.</p>
+                <a href="{% url 'department_participation' %}" class="btn btn-primary">View Report</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

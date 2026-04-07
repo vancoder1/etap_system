@@ -26,4 +26,9 @@ urlpatterns = [
     path('enrollments/', views.EnrollmentListView.as_view(), name='enrollment_list'),
     path('enrollments/add/', views.EnrollmentCreateView.as_view(), name='enrollment_add'),
     path('enrollments/<int:pk>/edit/', views.EnrollmentUpdateView.as_view(), name='enrollment_edit'),
+
+    # Analytics URLs
+    path('analytics/', views.AnalyticsDashboardView.as_view(), name='analytics_dashboard'),
+    path('analytics/course_popularity/', views.CoursePopularityView.as_view(), name='course_popularity'),
+    path('analytics/department_participation/', views.DepartmentParticipationView.as_view(), name='department_participation'),
 ]
