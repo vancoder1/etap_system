@@ -1,9 +1,20 @@
 {% extends 'training/base.html' %}
 
 {% block content %}
-<div class="jumbotron bg-white shadow-sm p-5 text-center mt-5 rounded border border-1">
-    <h1 class="display-4">Employee Training Analytics Portal</h1>
-    <p class="lead">Internal analytics portal to manage and review employee training data.</p>
-    <a class="btn btn-primary btn-lg mt-3" href="{% url 'employee_list' %}" role="button">Manage Employees</a>
+<div class="row align-items-center mt-5">
+    <div class="col-lg-8 mx-auto text-center mb-5">
+        <h1 class="display-4 fw-bold" style="color: #1e3c72;">Employee Training Analytics Portal</h1>
+        <p class="lead text-muted mt-3 mb-4">
+            Manage your internal training programs, track course completions, and generate insight-rich departmental reports seamlessly.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a class="btn btn-primary btn-lg shadow-sm px-4" href="{% url 'employee_list' %}" role="button">
+                Get Started
+            </a>
+            <a class="btn btn-light btn-lg border shadow-sm px-4 text-dark" href="{% url 'analytics_dashboard' %}" role="button">
+                View Analytics
+            </a>
+        </div>
+    </div>
 </div>
 {% endblock %}
